@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="ADR4IntNav">
+  <meta name="keywords" content="Adaptive Domain Randomization, Interactive Robot Navigation, Sim-to-Real Transfer">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Adaptive Domain Randomization for Generalizable Interactive Robot Navigation</title>
+
+  <link rel="icon" href="./static/images/icon.ico" type="image/svg+xml">
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<section class="Title-authors-codelinks">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">Adaptive Domain Randomization for Generalizable Interactive Robot Navigation</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="javascript:void(0)">Hongrui Sang</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="javascript:void(0)">Xin Li</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="javascript:void(0)">Rong Jiang</a><sup>2,3</sup>,
+            </span>
+            <span class="author-block">
+              <a href="javascript:void(0)">Daofang Chang</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="javascript:void(0)">Yanmin Zhou</a><sup>2,3</sup>,
+            </span>
+            <span class="author-block">
+              <a href="javascript:void(0)">Zhipeng Wang</a><sup>2,3</sup>,
+            </span>
+            <span class="author-block">
+              <a href="javascript:void(0)">Bin He</a><sup>2,3</sup>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Shanghai Maritime University,</span>
+            <span class="author-block"><sup>2</sup>Tongji University</span>
+			<span class="author-block"><sup>3</sup>Frontiers Science Center for Intelligent Autonomous Systems</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/sanghongrui/ADR4IntNav"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+              <!-- Dataset Link. -->
+              <span class="link-block">
+                <a href="https://github.com/sanghongrui/SceneAug"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Data</span>
+                  </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="Abstract-text">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+			Empowering navigation agents to physically interact with movable objects greatly improves their 
+			effectiveness in cluttered environments, especially when direct paths are blocked. 
+			While reinforcement learning has shown promise in interactive navigation, 
+			robust generalization to unseen and diverse environments remains challenging. 
+			Conventional domain transfer approaches, relying on fixed augmentation or static domain randomization, 
+			lack the ability to adapt variations to the agent’s learning progress..
+          </p>
+          <p>
+			To address this, we propose an Adaptive Domain Randomization (ADR) framework 
+			for generalizable interactive robot navigation. 
+			Our framework is structured as a two-level loop: 
+			an inner loop where the agent learns reinforcement learning policy through interaction 
+			with the training environment, and an outer loop that adaptively schedules environment variations. 
+			At its core, ADR dynamically updates the probability distribution of domain randomization strategies 
+			based on systematic generalization assessment. A generalization-driven feedback mechanism 
+			further trains a self-supervised meta domain controller to generate the right variations 
+			at the right time, enabling the agent to focus on informative, 
+			hard-to-generalize cases while maintaining stable progress.
+          </p>
+          <p>
+			Extensive experiments in both simulation and real-world settings demonstrate 
+			that ADR yields policies with stronger generalization across diverse 
+			and previously unseen interactive navigation scenarios.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+  </div>
+</section>
+
+<style>
+  /* 段落文字两端对齐 */
+  .Images .content p {
+    text-align: justify;        /* 两端对齐 */
+    text-justify: inter-word;   /* 优化英文单词间距 */
+    line-height: 1.6;
+  }
+</style>
+
+<section class="Background Images">
+  <div class="container is-max-desktop">
+
+    <div class="columns is-centered">
+
+      <!-- Example Image Block -->
+      <div class="column">
+        <div class="content">
+          <h2 class="title is-3">VisualIN vs. IntNav</h2>
+          <p>
+            Unlike standard VisualIN, interactive navigation requires 
+			reasoning about both the spatial layout and the consequences of actions on the environment.
+            
+            In real-world scenarios, environments often differ significantly from 
+			training conditions in terms of visual appearance (e.g., texture changes), 
+			spatial configuration (e.g., layout variations), or both. Therefore, 
+			an interactive navigation agent must be capable of robust generalization 
+			across different domains: original, texture, layout, and combined shifts to ensure 
+			reliable performance when transferred to unseen or dynamic environments.
+          </p>
+          <figure>
+            <img src="./static/images/1.jpg" alt="figure 1">
+            <figcaption> </figcaption>
+          </figure>
+        </div>
+      </div>
+      <!--/ Example Image Block -->
+	  
+	  <div class="column">
+	    <div class="content">
+	      <h2 class="title is-3">Static DR vs. ADR4IntNav</h2>
+	      <p>
+	        Conventional DR suffers from an open-loop nature: 
+			the randomized parameters and their distributions are manually determined 
+			before training and remain static throughout, particularly when multiple 
+			randomization strategies are combined. In contrast, our ADR4IntNav framework for generalizable interactive navigation. 
+			The inner loop enables the agent to learn navigation policies via reinforcement learning, 
+			while the outer loop adaptively schedules environment variations, allowing the agent to 
+			experience increasingly challenging or informative scenarios 
+			and thereby improve its generalization across diverse domains.
+	      </p>
+	      <figure>
+	        <img src="./static/images/2.jpg" alt="figure 2">
+	        <figcaption> </figcaption>
+	      </figure>
+	    </div>
+	  </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<section class="Method Images">
+  <div class="container is-max-desktop">
+
+    <div class="columns is-centered">
+
+      <!-- Example Image Block -->
+      <div class="column">
+        <div class="content">
+          <h2 class="title is-3">Overall technical framework of the proposed method</h2>
+          <p>
+			We introduces a two-level feedback mechanism: an inner loop where the agent learns 
+			policies via reinforcement learning, and an outer loop that adaptively schedules 
+			environment variations based on systematic assessment (see Fig. 2(b)). Our method 
+			introduces a systematic generalization assessment module that periodically evaluates 
+			the policy under distinct conditions, each created by applying a specific domain 
+			augmentation technique. The policy's performance metrics under these conditions are 
+			then aggregated and fed into a meta domain controller. To train this controller, we 
+			first design a composite scoring function to holistically measure policy performance. 
+			This score then forms a series of self-supervised loss functions, which guide the controller 
+			to learn a new probability distribution for applying augmentation strategies in the 
+			subsequent training phase. Thus, the IntNav agent learns policies through reinforcement 
+			learning in the inner loop and continuously provides updated policies for assessment. 
+			While, the domain controller driven by this assessment dynamically reshapes the training 
+			curriculum to target the agent’s weaknesses. Together, these loops promote more robust and efficient learning.
+          </p>
+          <figure>
+            <img src="./static/images/3.jpg" alt="figure 3">
+            <figcaption> </figcaption>
+          </figure>
+        </div>
+      </div>
+      <!--/ Example Image Block -->
+	  
+    </div>
+
+  </div>
+</section>
+
+
+<section class="simExperiment Environment Images">
+  <div class="container is-max-desktop">
+
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Simulation Environment</h2>
+        <div class="content has-text-justified">
+          <p>
+			We conduct all simulation experiments in iGibson v2.2.0, a high-fidelity simulator supporting 
+			complex robotic interactions in realistic indoor environments. From its 15 fully interactive 
+			scenes, we use 4 for training, 1 for systematic generalization assessment, and 2 for held-out 
+			testing. To enhance cross-domain generalization, we apply three domain randomization strategies:
+			Texture Randomization – randomizing object surface textures to simulate visual variability.
+			Layout Randomization – randomly rearranging seven movable object categories {"armchair", "trash_can", "stool", "coffee_table", "table_lamp", "straight_chair", "swivel_chair"} to introduce spatial and obstacle variability.
+			Mixed Randomization – combining texture and layout randomization for more complex, diverse environments, simulating unseen domain shifts.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+    <div class="columns is-centered">
+
+      <!-- Example Image Block -->
+      <div class="column">
+        <div class="content">
+          <h2 class="title is-3"></h2>
+		  
+          <figure>
+            <img src="./static/images/4-3-1.jpg" alt="figure 4">
+            <figcaption> Training Environment and Movable Obstacles </figcaption>
+          </figure>
+		  
+        </div>
+      </div>
+      <!--/ Example Image Block -->
+	  
+	  <!-- Example Image Block -->
+	  <div class="column">
+	    <div class="content">
+	      <h2 class="title is-3"></h2>
+	  		  
+	      <figure>
+	        <img src="./static/images/4-3-2.jpg" alt="figure 4">
+	        <figcaption> IntNav Task and Inner RL Policy </figcaption>
+	      </figure>
+	  		  
+	    </div>
+	  </div>
+	  <!--/ Example Image Block -->
+	  
+    </div>
+
+  </div>
+</section>
+
+
+<section class="sim Videos">
+  <div class="container is-max-desktop">
+
+    <div class="columns is-multiline">
+
+      <!-- 视频 1 -->
+      <div class="column is-half">
+        <div class="content">
+          <h2 class="title is-4"> Case 1</h2>
+          <video autoplay controls muted loop playsinline width="100%">
+            <source src="./static/videos/sim-case1.mp4" type="video/mp4">
+          </video>
+          <p class="justified">IntNav case in Combined Domain shift</p>
+        </div>
+      </div>
+
+      <!-- 视频 2 -->
+      <div class="column is-half">
+        <div class="content">
+          <h2 class="title is-4"> Case 2</h2>
+          <video autoplay controls muted loop playsinline width="100%">
+            <source src="./static/videos/sim-case2.mp4" type="video/mp4">
+          </video>
+          <p class="justified">IntNav case in Combined Domain shift </p>
+        </div>
+      </div>
+
+      <!-- 视频 3 -->
+      <div class="column is-half">
+        <div class="content">
+          <h2 class="title is-4"> Case 3</h2>
+          <video autoplay controls muted loop playsinline width="100%">
+            <source src="./static/videos/sim-case3.mp4" type="video/mp4">
+          </video>
+          <p class="justified">IntNav case in Combined Domain shift</p>
+        </div>
+      </div>
+
+      <!-- 视频 4 -->
+      <div class="column is-half">
+        <div class="content">
+          <h2 class="title is-4"> Case 4</h2>
+          <video autoplay controls muted loop playsinline width="100%">
+            <source src="./static/videos/sim-case-best.mp4" type="video/mp4">
+          </video>
+          <p class="justified">IntNav case in Combined Domain shift</p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<section class="realExperiment Environment Images">
+  <div class="container is-max-desktop">
+
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Real World Experiment</h2>
+        <div class="content has-text-justified">
+          <p>
+			To validate transferability, we further deploy our system in a 
+			real kitchen environment with controllable obstacles such as trash 
+			bins and chairs. We assume that the robot is assigned to a cook task, 
+			where it must navigate to the microwave while dealing with unexpected obstacles
+			 and infeasible. The physical platform is a RealMan mobile manipulator, 
+			 which is comparable to the Fetch robot used in simulation. It is equipped 
+			 with a 7-DoF manipulator and an omnidirectional mobile base, 
+			 enabling the integration of navigation and interaction in real-world tasks. 
+			 To maintain perceptual consistency, we calibrate the onboard Intel RealSense D435 
+			 RGB-D camera by adjusting its pose and parameters to match the simulated sensor 
+			 setup. Inference is conducted on a desktop workstation, with 
+			 the robot receiving commands and transmitting observations via a local network.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+    <div class="columns is-centered">
+
+      <!-- Example Image Block -->
+      <div class="column">
+        <div class="content">
+          <h2 class="title is-3"></h2>
+		  
+          <figure>
+            <img src="./static/images/4-4.jpg" alt="figure 4">
+            <figcaption>   </figcaption>
+          </figure>
+		  
+        </div>
+      </div>
+      <!--/ Example Image Block -->
+	  
+    </div>
+
+  </div>
+</section>
+
+
+<section class="Videos">
+  <div class="container is-max-desktop">
+
+    <div class="columns is-multiline">
+
+      <!-- 视频 1 -->
+      <div class="column is-half">
+        <div class="content">
+          <h2 class="title is-4">Case 1</h2>
+          <video autoplay controls muted loop playsinline width="100%">
+            <source src="./static/videos/real-case1.mp4" type="video/mp4">
+          </video>
+          <p class="justified">IntNav case in Real World Domain</p>
+        </div>
+      </div>
+
+      <!-- 视频 2 -->
+      <div class="column is-half">
+        <div class="content">
+          <h2 class="title is-4">Case 2</h2>
+          <video autoplay controls muted loop playsinline width="100%">
+            <source src="./static/videos/real-case2.mp4" type="video/mp4">
+          </video>
+          <p class="justified">IntNav case in Real World Domain</p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+
+
+<!-- <section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{park2021nerfies,
+  author    = {Park, Keunhong and Sinha, Utkarsh and Barron, Jonathan T. and Bouaziz, Sofien and Goldman, Dan B and Seitz, Steven M. and Martin-Brualla, Ricardo},
+  title     = {Nerfies: Deformable Neural Radiance Fields},
+  journal   = {ICCV},
+  year      = {2021},
+}</code></pre>
+  </div>
+</section> -->
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column">
+        <div class="content has-text-centered">
+          <p>
+            Website template borrowed from <a href="https://open-world-mobilemanip.github.io/">Open-World Mobile Manipulation</a>, <a href="https://voxposer.github.io/">VoxPoser</a>, <a href="https://github.com/nerfies/nerfies.github.io">NeRFies</a> and <a href="https://peract.github.io/">PerAct</a>. 
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- <footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link"
+         href="./static/videos/nerfies_paper.pdf">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            This means you are free to borrow the <a
+              href="https://github.com/nerfies/nerfies.github.io">source code</a> of this website,
+            we just ask that you link back to this page in the footer.
+            Please remember to remove the analytics code included in the header of the website which
+            you do not want on your website.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer> -->
+
+</body>
+</html>
